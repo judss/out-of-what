@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="128" align="center" src="assets/icon.png">
+  <img width="128" align="center" src="assets/OOW.png">
 </p>
 <h1 align="center">
   Out Of What
