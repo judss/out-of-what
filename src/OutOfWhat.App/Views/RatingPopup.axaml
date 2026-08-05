@@ -1,0 +1,51 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:OutOfWhatApp.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="320" d:DesignHeight="290"
+        x:Class="OutOfWhatApp.Views.RatingPopup"
+        x:DataType="vm:RatingViewModel"
+        Width="320" Height="290"
+        CanResize="False"
+        ShowInTaskbar="False"
+        SystemDecorations="None"
+        WindowStartupLocation="Manual"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        Topmost="True"
+        Title="Out Of What">
+    <Canvas>
+        <!-- Single continuous outline: rounded-rect card with a triangular notch
+             cut into its top edge. Built/updated in code (UpdateShape) since the
+             notch position depends on the tray icon's runtime screen position. -->
+        <Path x:Name="OutlinePath"
+              Fill="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+              Stroke="{DynamicResource SystemControlForegroundBaseLowBrush}"
+              StrokeThickness="1"
+              StrokeJoin="Round" />
+
+        <Border Canvas.Top="20"
+                Width="320"
+                Height="270"
+                Background="Transparent">
+            <StackPanel Margin="16" Spacing="12">
+                <TextBlock Text="How was your day?" FontSize="16" FontWeight="SemiBold" />
+
+                <TextBlock Text="{Binding Denominator, StringFormat='Out of {0}'}" Opacity="0.7" />
+
+                <DockPanel>
+                    <TextBlock Text="Rating" VerticalAlignment="Center" DockPanel.Dock="Right" Margin="8,0,0,0" />
+                    <NumericUpDown Value="{Binding Numerator}" Minimum="0" Maximum="{Binding Denominator}" />
+                </DockPanel>
+
+                <TextBox Watermark="What's one thing you're grateful for today? (optional)"
+                         Text="{Binding Gratitude}"
+                         AcceptsReturn="True"
+                         Height="70" />
+
+                <Button Content="Save" Command="{Binding SaveCommand}" HorizontalAlignment="Right" />
+            </StackPanel>
+        </Border>
+    </Canvas>
+</Window>

@@ -7,4 +7,8 @@
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>
+
+    <!-- Tray icon is created in code (App.axaml.cs) so it can branch per-OS:
+         macOS uses a native AppKit status item (see Platform/MacOS), since
+         Avalonia's TrayIcon.Clicked never fires there. -->
 </Application>
