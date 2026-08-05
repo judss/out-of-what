@@ -8,12 +8,12 @@ namespace OutOfWhatApp.Views;
 
 public partial class RatingPopup : Window
 {
-    private const double CardWidth = 320;
-    private const double CardHeight = 270;
+    private const double CardWidth = 240;
+    private const double CardHeight = 320;
     private const double ArrowHeight = 20;
     private const double ArrowHalfWidth = 15;
     private const double ArrowTipPeakY = 3; // how close the rounded tip comes to y=0
-    private const double ArrowCornerRadius = 8;
+    private const double ArrowCornerRadius = 20; // brand token: RadiusPopup
 
     public RatingPopup()
     {

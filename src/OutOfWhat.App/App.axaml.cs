@@ -88,8 +88,10 @@ public partial class App : Application
             PositionNearTrayCorner(_ratingPopup);
         }
 
+        _ratingPopup.Opacity = 0;
         _ratingPopup.Show();
         _ratingPopup.Activate();
+        _ratingPopup.Opacity = 1; // animated by the window's own Opacity Transition
     }
 
     private static void PositionUnderIcon(RatingPopup window, PixelPoint iconPosition)
@@ -102,7 +104,7 @@ public partial class App : Application
 
         const int margin = 12;
         const int verticalPad = 2; // small gap so the arrow tip sits right at the icon, not overlapping it
-        const double arrowInset = 24; // keep the arrow tip within the card's rounded corners
+        const double arrowInset = 35; // keep the arrow tip within the card's rounded corners (20px radius + 15px half-width)
         var area = screen.WorkingArea;
         var width = (int)window.Width;
 

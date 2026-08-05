@@ -1,0 +1,48 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Primary filled button -->
+    <Style Selector="Button.primary">
+        <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusButton}" />
+        <Setter Property="Padding" Value="16,10" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="Button.primary:pointerover">
+        <Setter Property="Background" Value="{DynamicResource PrimaryHoverBrush}" />
+    </Style>
+    <Style Selector="Button.primary:pressed">
+        <Setter Property="Background" Value="{DynamicResource PrimaryPressedBrush}" />
+    </Style>
+
+    <!-- Secondary (surface) button -->
+    <Style Selector="Button.secondary">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusButton}" />
+        <Setter Property="Padding" Value="16,10" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+    </Style>
+    <Style Selector="Button.secondary:pointerover">
+        <Setter Property="Background" Value="{DynamicResource HoverBrush}" />
+    </Style>
+
+    <!-- Text inputs -->
+    <Style Selector="TextBox">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusInput}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CaretBrush" Value="{DynamicResource PrimaryBrush}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource PrimaryBrush}" />
+    </Style>
+    <Style Selector="TextBox:focus">
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+        <Setter Property="BorderThickness" Value="2" />
+    </Style>
+
+</Styles>

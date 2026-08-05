@@ -3,49 +3,101 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:OutOfWhatApp.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="320" d:DesignHeight="290"
+        mc:Ignorable="d" d:DesignWidth="240" d:DesignHeight="340"
         x:Class="OutOfWhatApp.Views.RatingPopup"
         x:DataType="vm:RatingViewModel"
-        Width="320" Height="290"
+        Width="240" Height="340"
         CanResize="False"
         ShowInTaskbar="False"
         SystemDecorations="None"
         WindowStartupLocation="Manual"
         Background="Transparent"
         TransparencyLevelHint="Transparent"
+        FontFamily="Inter"
         Topmost="True"
         Title="Out Of What">
+    <Window.Transitions>
+        <Transitions>
+            <DoubleTransition Property="Opacity" Duration="0:0:0.18" Easing="CubicEaseOut" />
+        </Transitions>
+    </Window.Transitions>
+
     <Canvas>
         <!-- Single continuous outline: rounded-rect card with a triangular notch
              cut into its top edge. Built/updated in code (UpdateShape) since the
              notch position depends on the tray icon's runtime screen position. -->
         <Path x:Name="OutlinePath"
-              Fill="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
-              Stroke="{DynamicResource SystemControlForegroundBaseLowBrush}"
+              Fill="{DynamicResource PopupBrush}"
+              Stroke="{DynamicResource BorderBrush}"
               StrokeThickness="1"
               StrokeJoin="Round" />
 
         <Border Canvas.Top="20"
-                Width="320"
-                Height="270"
+                Width="240"
+                Height="320"
                 Background="Transparent">
-            <StackPanel Margin="16" Spacing="12">
-                <TextBlock Text="How was your day?" FontSize="16" FontWeight="SemiBold" />
+            <Grid>
+                <StackPanel IsVisible="{Binding !IsConfirmingOverage}"
+                            Margin="24" Spacing="16"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <TextBlock Text="How was your day?"
+                               FontSize="{DynamicResource FontSizeH2}"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextBrush}"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center" />
 
-                <TextBlock Text="{Binding Denominator, StringFormat='Out of {0}'}" Opacity="0.7" />
+                    <TextBlock Text="{Binding Denominator, StringFormat='Out of {0}'}"
+                               FontSize="{DynamicResource FontSizeBody}"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center" />
 
-                <DockPanel>
-                    <TextBlock Text="Rating" VerticalAlignment="Center" DockPanel.Dock="Right" Margin="8,0,0,0" />
-                    <NumericUpDown Value="{Binding Numerator}" Minimum="0" Maximum="{Binding Denominator}" />
-                </DockPanel>
+                    <TextBox Text="{Binding NumeratorText}"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Center"
+                             FontSize="{DynamicResource FontSizeDisplay}"
+                             FontWeight="Medium" />
 
-                <TextBox Watermark="What's one thing you're grateful for today? (optional)"
-                         Text="{Binding Gratitude}"
-                         AcceptsReturn="True"
-                         Height="70" />
+                    <TextBlock Text="{Binding ValidationError}"
+                               IsVisible="{Binding HasValidationError}"
+                               Foreground="{DynamicResource DangerBrush}"
+                               FontSize="{DynamicResource FontSizeCaption}"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap" />
 
-                <Button Content="Save" Command="{Binding SaveCommand}" HorizontalAlignment="Right" />
-            </StackPanel>
+                    <Button Content="Log it"
+                            Command="{Binding SaveCommand}"
+                            Classes="primary"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel IsVisible="{Binding IsConfirmingOverage}"
+                            Margin="24" Spacing="16"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <TextBlock Text="That's higher than today's number — sure you want to log it?"
+                               FontSize="{DynamicResource FontSizeBodyLarge}"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextBrush}"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap" />
+
+                    <Button Content="Yes, log it"
+                            Command="{Binding ConfirmSaveCommand}"
+                            Classes="primary"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center" />
+
+                    <Button Content="No, go back"
+                            Command="{Binding CancelConfirmCommand}"
+                            Classes="secondary"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center" />
+                </StackPanel>
+            </Grid>
         </Border>
     </Canvas>
 </Window>

@@ -9,17 +9,26 @@ namespace OutOfWhatApp.ViewModels;
 
 public partial class RatingViewModel : ObservableObject
 {
+    private const int MaxNumerator = 100_000;
+
     private readonly IRatingStore _ratingStore;
     private readonly IDailyRollProvider _dailyRollProvider;
+    private int _pendingNumerator;
 
     [ObservableProperty]
-    private int _numerator;
+    private string? _numeratorText;
 
     [ObservableProperty]
     private int _denominator = 10;
 
     [ObservableProperty]
-    private string? _gratitude;
+    [NotifyPropertyChangedFor(nameof(HasValidationError))]
+    private string? _validationError;
+
+    public bool HasValidationError => !string.IsNullOrEmpty(ValidationError);
+
+    [ObservableProperty]
+    private bool _isConfirmingOverage;
 
     public event EventHandler? Saved;
 
@@ -32,14 +41,60 @@ public partial class RatingViewModel : ObservableObject
     public async Task LoadTodayAsync()
     {
         Denominator = await _dailyRollProvider.GetOrCreateTodayDenominatorAsync();
-        Numerator = 0;
-        Gratitude = null;
+        NumeratorText = "";
+        ValidationError = null;
+        IsConfirmingOverage = false;
     }
 
     [RelayCommand]
     private async Task SaveAsync()
     {
-        var entry = new RatingEntry(DateTimeOffset.Now, Numerator, Denominator, Gratitude);
+        ValidationError = null;
+
+        if (!int.TryParse(NumeratorText, out var numerator))
+        {
+            ValidationError = "Enter a number to log your day.";
+            return;
+        }
+
+        if (numerator < 0)
+        {
+            ValidationError = "Rating can't be negative.";
+            return;
+        }
+
+        if (numerator > MaxNumerator)
+        {
+            ValidationError = "That's a bit too high — keep it under 100,000.";
+            return;
+        }
+
+        if (numerator > Denominator)
+        {
+            _pendingNumerator = numerator;
+            IsConfirmingOverage = true;
+            return;
+        }
+
+        await SaveEntryAsync(numerator);
+    }
+
+    [RelayCommand]
+    private async Task ConfirmSaveAsync()
+    {
+        IsConfirmingOverage = false;
+        await SaveEntryAsync(_pendingNumerator);
+    }
+
+    [RelayCommand]
+    private void CancelConfirm()
+    {
+        IsConfirmingOverage = false;
+    }
+
+    private async Task SaveEntryAsync(int numerator)
+    {
+        var entry = new RatingEntry(DateTimeOffset.Now, numerator, Denominator, Note: null);
         await _ratingStore.AddAsync(entry);
 
         Saved?.Invoke(this, EventArgs.Empty);
