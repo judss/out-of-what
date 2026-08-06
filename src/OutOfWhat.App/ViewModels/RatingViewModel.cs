@@ -13,7 +13,6 @@ public partial class RatingViewModel : ObservableObject
 
     private readonly IRatingStore _ratingStore;
     private readonly IDailyRollProvider _dailyRollProvider;
-    private int _pendingNumerator;
 
     [ObservableProperty]
     private string? _numeratorText;
@@ -28,9 +27,13 @@ public partial class RatingViewModel : ObservableObject
     public bool HasValidationError => !string.IsNullOrEmpty(ValidationError);
 
     [ObservableProperty]
-    private bool _isConfirmingOverage;
+    [NotifyPropertyChangedFor(nameof(HasOverageWarning))]
+    private string? _overageWarning;
+
+    public bool HasOverageWarning => !string.IsNullOrEmpty(OverageWarning);
 
     public event EventHandler? Saved;
+    public event EventHandler? Cancelled;
 
     public RatingViewModel(IRatingStore ratingStore, IDailyRollProvider dailyRollProvider)
     {
@@ -43,7 +46,16 @@ public partial class RatingViewModel : ObservableObject
         Denominator = await _dailyRollProvider.GetOrCreateTodayDenominatorAsync();
         NumeratorText = "";
         ValidationError = null;
-        IsConfirmingOverage = false;
+        OverageWarning = null;
+    }
+
+    partial void OnNumeratorTextChanged(string? value)
+    {
+        ValidationError = null;
+
+        OverageWarning = int.TryParse(value, out var numerator) && numerator > Denominator
+            ? "You scored higher than today's target.\nAre you sure you want to log this?"
+            : null;
     }
 
     [RelayCommand]
@@ -69,27 +81,13 @@ public partial class RatingViewModel : ObservableObject
             return;
         }
 
-        if (numerator > Denominator)
-        {
-            _pendingNumerator = numerator;
-            IsConfirmingOverage = true;
-            return;
-        }
-
         await SaveEntryAsync(numerator);
     }
 
     [RelayCommand]
-    private async Task ConfirmSaveAsync()
+    private void Cancel()
     {
-        IsConfirmingOverage = false;
-        await SaveEntryAsync(_pendingNumerator);
-    }
-
-    [RelayCommand]
-    private void CancelConfirm()
-    {
-        IsConfirmingOverage = false;
+        Cancelled?.Invoke(this, EventArgs.Empty);
     }
 
     private async Task SaveEntryAsync(int numerator)

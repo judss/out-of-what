@@ -8,8 +8,8 @@ namespace OutOfWhatApp.Views;
 
 public partial class RatingPopup : Window
 {
-    private const double CardWidth = 240;
-    private const double CardHeight = 320;
+    private const double CardWidth = 350;
+    private const double CardHeight = 350;
     private const double ArrowHeight = 20;
     private const double ArrowHalfWidth = 15;
     private const double ArrowTipPeakY = 3; // how close the rounded tip comes to y=0
@@ -25,6 +25,7 @@ public partial class RatingPopup : Window
     {
         DataContext = viewModel;
         viewModel.Saved += (_, _) => Hide();
+        viewModel.Cancelled += (_, _) => Hide();
         Deactivated += (_, _) => Hide();
     }
 

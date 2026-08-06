@@ -55,7 +55,7 @@
     <!-- Corner radius -->
     <CornerRadius x:Key="RadiusPopup">20</CornerRadius>
     <CornerRadius x:Key="RadiusCard">16</CornerRadius>
-    <CornerRadius x:Key="RadiusButton">12</CornerRadius>
+    <CornerRadius x:Key="RadiusButton">8</CornerRadius>
     <CornerRadius x:Key="RadiusInput">12</CornerRadius>
     <CornerRadius x:Key="RadiusPill">999</CornerRadius>
 
